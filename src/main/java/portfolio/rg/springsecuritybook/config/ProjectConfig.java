@@ -2,6 +2,9 @@ package portfolio.rg.springsecuritybook.config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
+import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.password.NoOpPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -12,34 +15,30 @@ import org.springframework.security.provisioning.InMemoryUserDetailsManager;
 import org.springframework.security.core.userdetails.User;
 
 @Configuration
-public class ProjectConfig {
+public class ProjectConfig extends WebSecurityConfigurerAdapter {
 
-    @Bean
-    public UserDetailsService userDetailsService() {
+    @Override
+    protected void configure(HttpSecurity http) throws Exception {
+        http.httpBasic();
+        http.authorizeRequests()
+                .anyRequest().authenticated();
+    }
 
-        //Defines a new UserDetailsService of type InMemoryUserDetailsManager
+    //Replaced UserDetailsService and PasswordEncoder Beans,
+    //by passing them locally into AuthManagerBuilder
+    @Override
+    protected void configure(
+            AuthenticationManagerBuilder auth)
+            throws Exception {
         var userDetailsService =
                 new InMemoryUserDetailsManager();
-
-        //Creating a hard-coded User for the Service
         var user = User.withUsername("john")
                 .password("12345")
                 .authorities("read")
                 .build();
-
-        //Adds the user to be managed by UserDetailsService
         userDetailsService.createUser(user);
-
-        //Returning our service, for it to be passed into Spring Context
-        return userDetailsService;
-    }
-
-    @Bean
-    public PasswordEncoder passwordEncoder() {
-
-        //treats passwords as plain text. It
-        //doesn’t encrypt or hash them.
-        return NoOpPasswordEncoder.getInstance();
+        auth.userDetailsService(userDetailsService)
+                .passwordEncoder(NoOpPasswordEncoder.getInstance());
     }
 
 }
