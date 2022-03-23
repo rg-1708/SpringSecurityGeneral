@@ -6,6 +6,7 @@ import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
+import portfolio.rg.springsecuritybook.authentication.CustomEntryPoint;
 
 
 @Configuration
@@ -26,8 +27,15 @@ public class WebAuthorizationConfig extends WebSecurityConfigurerAdapter {
     }
 
     @Override
-    protected void configure(HttpSecurity http) throws Exception {
-        http.httpBasic();
-        http.authorizeRequests().anyRequest().authenticated();
+    protected void configure(HttpSecurity http)
+            throws Exception {
+        http.httpBasic(c -> {
+            c.realmName("OTHER");
+            c.authenticationEntryPoint(new CustomEntryPoint());
+        });
+
+        http.authorizeRequests()
+                .anyRequest()
+                .authenticated();
     }
 }
