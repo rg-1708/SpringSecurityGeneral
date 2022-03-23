@@ -23,7 +23,13 @@ public class UserManagementConfig {
 
     @Bean
     public UserDetailsService userDetailsService() {
-        UserDetails u = new User("john", "12345", "read");
+
+        //We need to store the encoded password,
+        //In order to be able to verify it
+        UserDetails u = new User("john",
+                passwordEncoder().encode("12345"),
+                "read");
+
         List<UserDetails> users = List.of(u);
         return new InMemoryUserDetailsService(users);
     }

@@ -30,6 +30,7 @@ public class CustomAuthenticationProvider
         String password = authentication.getCredentials().toString();
 
         UserDetails u = userDetailsService.loadUserByUsername(username);
+
         if (passwordEncoder.matches(password, u.getPassword())) {
             return new UsernamePasswordAuthenticationToken(
                     username,
