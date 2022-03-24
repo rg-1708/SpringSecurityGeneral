@@ -22,7 +22,9 @@ public class AuthenticationProviderService
     private final SCryptPasswordEncoder sCryptPasswordEncoder;
 
     @Autowired
-    public AuthenticationProviderService(JpaUserDetailsService userDetailsService, BCryptPasswordEncoder bCryptPasswordEncoder, SCryptPasswordEncoder sCryptPasswordEncoder) {
+    public AuthenticationProviderService(JpaUserDetailsService userDetailsService,
+                                         BCryptPasswordEncoder bCryptPasswordEncoder,
+                                         SCryptPasswordEncoder sCryptPasswordEncoder) {
         this.userDetailsService = userDetailsService;
         this.bCryptPasswordEncoder = bCryptPasswordEncoder;
         this.sCryptPasswordEncoder = sCryptPasswordEncoder;
@@ -37,6 +39,7 @@ public class AuthenticationProviderService
         String password = authentication
                 .getCredentials()
                 .toString();
+
 
         CustomUserDetails user =
                 userDetailsService.loadUserByUsername(username);
