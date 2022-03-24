@@ -6,17 +6,23 @@ import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
+import portfolio.rg.springsecuritybook.authentication.CustomAuthenticationFailureHandler;
+import portfolio.rg.springsecuritybook.authentication.CustomAuthenticationSuccessHandler;
 import portfolio.rg.springsecuritybook.authentication.CustomEntryPoint;
 
 
 @Configuration
 public class WebAuthorizationConfig extends WebSecurityConfigurerAdapter {
 
+    private final CustomAuthenticationSuccessHandler authenticationSuccessHandler;
+    private final CustomAuthenticationFailureHandler authenticationFailureHandler;
     private final AuthenticationProvider authenticationProvider;
 
     @Autowired
-    public WebAuthorizationConfig(AuthenticationProvider authenticationProvider) {
+    public WebAuthorizationConfig(AuthenticationProvider authenticationProvider, CustomAuthenticationFailureHandler authenticationFailureHandler, CustomAuthenticationSuccessHandler authenticationSuccessHandler) {
         this.authenticationProvider = authenticationProvider;
+        this.authenticationFailureHandler = authenticationFailureHandler;
+        this.authenticationSuccessHandler = authenticationSuccessHandler;
     }
 
 
@@ -29,7 +35,14 @@ public class WebAuthorizationConfig extends WebSecurityConfigurerAdapter {
     @Override
     protected void configure(HttpSecurity http)
             throws Exception {
-        http.formLogin();
-        http.authorizeRequests().anyRequest().authenticated();
+
+        http.formLogin()
+                .successHandler(authenticationSuccessHandler)
+                .failureHandler(authenticationFailureHandler);
+
+
+        http.authorizeRequests()
+                .anyRequest().authenticated();
     }
+
 }

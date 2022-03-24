@@ -13,7 +13,7 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 @RestController
-@RequestMapping("api")
+@RequestMapping("/api/v1")
 public class HelloController {
     @GetMapping("/hello")
     public String hello(Authentication a) {
