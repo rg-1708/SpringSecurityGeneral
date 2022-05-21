@@ -11,7 +11,7 @@
 #### There are also several other branches
 - HandsOn projects
 - The ones that cover some Major specific topic.
-#### Someof the Custom Components :
+#### Some of the Custom Components :
 - User Details, User Details Service, User Details Manager
 - Password Encoders
 - Authentication Provider
